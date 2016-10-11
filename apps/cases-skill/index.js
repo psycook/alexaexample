@@ -31,7 +31,7 @@ app.dictionary = {
 };
 
 app.launch(function(request, response) {
-    response.say('Welcome to case logger.').reprompt('Welcome to case logger.').shouldEndSession(false);
+    response.say('Welcome to sales force case manager.').reprompt('Welcome to sales force case manager.').shouldEndSession(false);
 });
 
 app.error = function(exception, request, response) {
@@ -47,7 +47,7 @@ app.intent('caseCreate', {
             "Priority": "LITERAL",
             "Name": "LITERAL"
         },
-        "utterances": ["{new|open|start|} case for {subjects|Subject} with priority {priorities|Priority} for {names|Name}"]
+        "utterances": ["{new|open|start|} case for {subjects|Subject} with {priorities|Priority} priority for {names|Name}"]
     },
     function(request, response) {
         subject = request.slot('Subject');
