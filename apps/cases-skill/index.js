@@ -23,6 +23,19 @@ app.error = function( exception, request, response ) {
    response.say( 'Sorry an error occured ' + error.message);
 };
 
+app.intent('caseCreate',
+  {
+    "slots":{"Severity":"LITERAL"},
+    "utterances":[ "new case for {subjects|Subject} with severity {severities|Severity} for {names|Name}" ]
+  },
+  function(request,response) {
+    name = request.slot('Subject');
+    severity = request.slot('Severity');
+    name = request.slot('Name');
+    console.log("UTTERANCE:caseCreate");
+    response.say("Thank you " + name + ".  I have opened your " + severity + " priority case for the " + subject);
+  }
+);
 app.intent('caseOpen',
   {
     "slots":{},
