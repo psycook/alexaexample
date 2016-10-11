@@ -25,7 +25,7 @@ app.error = function( exception, request, response ) {
 
 app.intent('caseCreate',
   {
-    "slots":{"Severity":"LITERAL"},
+    "slots":{"Subject":"LITERAL","Severity":"LITERAL","Name":"LITERAL"},
     "utterances":[ "new case for {subjects|Subject} with severity {severities|Severity} for {names|Name}" ]
   },
   function(request,response) {
