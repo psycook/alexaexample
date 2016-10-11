@@ -54,7 +54,7 @@ app.intent('caseSeverity',
   function(request,response) {
     severity = request.slot('Severity');
     console.log("UTTERANCE:caseSeverity " + severity);
-    response.say("Got it.  The severity is " + severity + ".  What is your name?");
+    response.say("Lovely.  The severity is " + severity + ".  What is your name?");
     }
 );
 
@@ -66,7 +66,7 @@ app.intent('caseName',
   function(request,response) {
     name = request.slot('Name');
     console.log("UTTERANCE:caseName opened case for " + subject + " at severity " + severity + " for " + name);
-    response.say("Got it. Thank you " + name + ".  I have opened your " + severity + " priority case for the " + subject);
+    response.say("Thank you " + name + ".  I have opened your " + severity + " priority case for the " + subject);
     }
 );
 
