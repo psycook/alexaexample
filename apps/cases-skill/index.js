@@ -3,9 +3,9 @@ module.change_code = 1;
 
 var alexa = require( 'alexa-app' );
 var app = new alexa.app( 'cases-skill' );
-app.dictionary={"subjects":["printer", "lift", "door"],
+app.dictionary={"subjects":["printer", "lift", "door", "laptop", "phone"],
                 "severities":["low", "medium", "high"],
-                "names":["Simon Cook", "Larence Ratcliffe", "Sanjay Pradhan"]
+                "names":["Simon Cook", "Larence Ratcliffe", "Sanjay Pradhan", "John Smith"]
 };
 
 var name;
@@ -29,7 +29,7 @@ app.intent('caseCreate',
     "utterances":[ "new case for {subjects|Subject} with severity {severities|Severity} for {names|Name}" ]
   },
   function(request,response) {
-    name = request.slot('Subject');
+    subject = request.slot('Subject');
     severity = request.slot('Severity');
     name = request.slot('Name');
     console.log("UTTERANCE:caseCreate");
