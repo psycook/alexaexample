@@ -32,7 +32,7 @@ app.intent('caseCreate',
     subject = request.slot('Subject');
     severity = request.slot('Severity');
     name = request.slot('Name');
-    console.log("UTTERANCE:caseCreate");
+    console.log("UTTERANCE:caseCreate - Thank you " + name + ".  I have opened your " + severity + " priority case for the " + subject);
     response.say("Thank you " + name + ".  I have opened your " + severity + " priority case for the " + subject);
   }
 );
