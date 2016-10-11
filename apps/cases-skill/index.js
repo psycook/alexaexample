@@ -1,41 +1,102 @@
 module.change_code = 1;
 'use strict';
 
-var alexa = require( 'alexa-app' );
-var app = new alexa.app( 'cases-skill' );
-app.dictionary={"subjects":["printer", "lift", "door", "laptop", "phone"],
-                "severities":["low", "medium", "high"],
-                "names":["Simon Cook", "Larence Ratcliffe", "Sanjay Pradhan", "John Smith"]
-};
+var alexa = require('alexa-app');
+var app = new alexa.app('cases-skill');
+var nforce = require('nforce');
 
+// used for partial intents
 var name;
 var subject;
-var severity;
+var priority;
 
-app.launch( function( request, response ) {
-    response.say( 'Welcome to case logger.' ).reprompt( 'Welcome to case logger.' ).shouldEndSession( false );
-} );
+// saleforce log in details
+var SF_CLIENT_ID = '3MVG99OxTyEMCQ3gpLbNrfR_7CPi4qJaodVDpvY5AHDNm8OKbCJLuGselI19gdyRdf.MDaivybiAmZ5cu.7fe';
+var SF_CLIENT_SECRET = '4024960190951116854';
+var SF_USERNAME = 'simon.cook@innovate.ul';
+var SF_PASSWORD = 'salesforce1';
+var SF_CALLBACK_URL = 'http://localhost:3000/oauth/_callback';
 
-app.error = function( exception, request, response ) {
-   console.log(exception)
-   console.log(request);
-   console.log(response);
-   response.say( 'Sorry an error occured ' + error.message);
+var org = nforce.createConnection({
+    clientId: SF_CLIENT_ID,
+    clientSecret: SF_CLIENT_SECRET,
+    redirectUri: SF_CALLBACK_URL,
+    mode: 'single'
+});
+
+app.dictionary = {
+    "subjects": ["printer", "lift", "door", "laptop", "phone"],
+    "priorities": ["low", "medium", "high"],
+    "names": ["Simon Cook", "Larence Ratcliffe", "Sanjay Pradhan", "John Smith"]
 };
 
-app.intent('caseCreate',
-  {
-    "slots":{"Subject":"LITERAL","Severity":"LITERAL","Name":"LITERAL"},
-    "utterances":[ "new case for {subjects|Subject} with severity {severities|Severity} for {names|Name}" ]
-  },
-  function(request,response) {
-    subject = request.slot('Subject');
-    severity = request.slot('Severity');
-    name = request.slot('Name');
-    console.log("UTTERANCE:caseCreate - Thank you " + name + ".  I have opened your " + severity + " priority case for the " + subject);
-    response.say("Thank you " + name + ".  I have opened your " + severity + " priority case for the " + subject);
-  }
+app.launch(function(request, response) {
+    response.say('Welcome to case logger.').reprompt('Welcome to case logger.').shouldEndSession(false);
+});
+
+app.error = function(exception, request, response) {
+    console.log(exception)
+    console.log(request);
+    console.log(response);
+    response.say('Sorry an error occured ' + error.message);
+};
+
+app.intent('caseCreate', {
+        "slots": {
+            "Subject": "LITERAL",
+            "Priority": "LITERAL",
+            "Name": "LITERAL"
+        },
+        "utterances": ["{new|open|start|} case for {subjects|Subject} with priority {priorities|Priority} for {names|Name}"]
+    },
+    function(request, response) {
+        subject = request.slot('Subject');
+        priority = request.slot('Priority');
+        name = request.slot('Name');
+
+        //create the object
+        var newCase = nforce.createSObject('Case');
+        newCase.set('Subject', subject);
+        //newCase.set('CreatorName', name);
+        newCase.set('Priority', priority);
+        newCase.set('Origin', 'Echo');
+        newCase.set('Type', 'Problem');
+        newCase.set('Status', 'New');
+        newCase.set('Description', 'Case opened for ' + name);
+
+        org.authenticate({
+            username: SF_USERNAME,
+            password: SF_PASSWORD
+        }).then(function() {
+            return org.insert({
+                sobject: newCase
+            })
+        }).then(function(result) {
+            if (result.success) {
+                console.log("UTTERANCE:caseCreate - Thank you " + name + ".  I have opened your " + priority + " priority case for the " + subject);
+                response.say("Thank you " + name + ".  I have opened your " + priority + " priority case for the " + subject);
+                response.send();
+            } else {
+                console.log("UTTERANCE:caseCreate - Tilt " + JSON.stringify(result));
+                response.say("I am afraid I cannot do that " + name);
+                response.send();
+            }
+        }).error(function(err) {
+            console.log("UTTERANCE:caseCreate - Tilt " + JSON.stringify(err));
+            response.say("I am afraid I cannot do that " + name);
+            response.send();
+        });
+        return false;
+    }
 );
+
+app.sessionEnded(function(request,response) {
+    // Clean up the user's server-side stuff, if necessary
+    console.log("SESSION ENDED");
+    // No response necessary
+});
+
+/*
 app.intent('caseOpen',
   {
     "slots":{},
@@ -55,19 +116,19 @@ app.intent('caseSubject',
   function(request,response) {
     subject = request.slot('Subject');
     console.log("UTTERANCE:caseSubject " + subject);
-    response.say("Got it.  The subject is " + subject + ".  What is the severity?");
+    response.say("Got it.  The subject is " + subject + ".  What is the priority?");
     }
 );
 
-app.intent('caseSeverity',
+app.intent('casePriority',
   {
-    "slots":{"Severity":"LITERAL"},
-    "utterances":[ "the severity is {severities|Severity}", "severity is {severities|Severity}", "severity {severities|Severity}" ]
+    "slots":{"priority":"LITERAL"},
+    "utterances":[ "the priority is {priorities|priority}", "priority is {priorities|priority}", "priority {priorities|priority}" ]
   },
   function(request,response) {
-    severity = request.slot('Severity');
-    console.log("UTTERANCE:caseSeverity " + severity);
-    response.say("Lovely.  The severity is " + severity + ".  What is your name?");
+    priority = request.slot('priority');
+    console.log("UTTERANCE:casepriority " + priority);
+    response.say("Lovely.  The priority is " + priority + ".  What is your name?");
     }
 );
 
@@ -78,9 +139,9 @@ app.intent('caseName',
   },
   function(request,response) {
     name = request.slot('Name');
-    console.log("UTTERANCE:caseName opened case for " + subject + " at severity " + severity + " for " + name);
-    response.say("Thank you " + name + ".  I have opened your " + severity + " priority case for the " + subject);
+    console.log("UTTERANCE:caseName opened case for " + subject + " at priority " + priority + " for " + name);
+    response.say("Thank you " + name + ".  I have opened your " + priority + " priority case for the " + subject);
     }
 );
-
+*/
 module.exports = app;
