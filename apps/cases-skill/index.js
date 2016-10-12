@@ -81,8 +81,8 @@ app.intent('caseCreate', {
                   title: "Case Created",
                   text: "Thanks you " + name + ".  Your case for " + subject + " with a " + priority + " priority has been raised.",
                   image: {
-                    smallImageUrl: "https://smc-alexa-case.herokuapp.com/salesforce-logo-small.png",
-                    largeImageUrl: "https://smc-alexa-case.herokuapp.com/salesforce-logo.png"
+                    smallImageUrl: "https://s3-eu-west-1.amazonaws.com/smc-s3-images/images/salesforce-logo.png",
+                    largeImageUrl: "https://s3-eu-west-1.amazonaws.com/smc-s3-images/images/salesforce-logo.png"
                   }
                 });
                 response.send();
