@@ -74,14 +74,14 @@ app.intent('caseCreate', {
             })
         }).then(function(result) {
             if (result.success) {
-                console.log("UTTERANCE:caseCreate - Thank you " + name + ".  I have opened your " + priority + " priority case for the " + subject);
+                console.log("UTTERANCE: caseCreate - Thank you " + name + ".  I have opened your " + priority + " priority case for the " + subject);
                 response.say("Thank you " + name + ".  I have opened your " + priority + " priority case for the " + subject);
                 response.card({
                   type: "Standard",
                   title: "Case Created",
                   text: "Thanks you " + name + ".  Your case for " + subject + " with a " + priority + " priority has been raised.",
                   image: {
-                    smallImageUrl: "https://s3-eu-west-1.amazonaws.com/smc-s3-images/images/salesforce-logo.png",
+                    smallImageUrl: "https://s3-eu-west-1.amazonaws.com/smc-s3-images/images/salesforce-logo-small.png",
                     largeImageUrl: "https://s3-eu-west-1.amazonaws.com/smc-s3-images/images/salesforce-logo.png"
                   }
                 });
