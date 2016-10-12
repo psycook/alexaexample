@@ -47,7 +47,8 @@ app.intent('caseCreate', {
             "Priority": "LITERAL",
             "Name": "LITERAL"
         },
-        "utterances": ["{new|open|start|} case for {subjects|Subject} with {priorities|Priority} priority for {names|Name}"]
+        "utterances": ["{new|open|start|} case for {subjects|Subject} with {priorities|Priority} priority for {names|Name}",
+                       "{new|open|start|} case for {subjects|Subject} {priorities|Priority} priority for {names|Name}"]
     },
     function(request, response) {
         subject = request.slot('Subject');
