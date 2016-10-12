@@ -25,7 +25,7 @@ var org = nforce.createConnection({
 });
 
 app.dictionary = {
-    "subjects": ["printer", "lift", "door", "laptop", "phone"],
+    "subjects": ["printer", "lift", "door", "laptop", "phone", "network", "keyboard", "computer", "mouse"],
     "priorities": ["low", "medium", "high"],
     "names": ["Simon Cook", "Larence Ratcliffe", "Sanjay Pradhan", "John Smith"]
 };
