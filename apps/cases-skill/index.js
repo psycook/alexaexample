@@ -76,6 +76,15 @@ app.intent('caseCreate', {
             if (result.success) {
                 console.log("UTTERANCE:caseCreate - Thank you " + name + ".  I have opened your " + priority + " priority case for the " + subject);
                 response.say("Thank you " + name + ".  I have opened your " + priority + " priority case for the " + subject);
+                response.card({
+                  type: "Simple",
+                  title: "Case Created",
+                  content: "Thanks you " + name + ".  Your case for " + subject + " with a " + priority + " priority has been raised.");
+                  image: {
+                    smallImageUrl: "https://smc-alexa-case.herokuapp.com/salesforce-logo-small.png",
+                    largeImageUrl: "https://smc-alexa-case.herokuapp.com/salesforce-logo.png"
+                  }
+                });
                 response.send();
             } else {
                 console.log("UTTERANCE:caseCreate - Tilt " + JSON.stringify(result));
