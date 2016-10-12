@@ -79,7 +79,7 @@ app.intent('caseCreate', {
                 response.card({
                   type: "Standard",
                   title: "Case Created",
-                  content: "Thanks you " + name + ".  Your case for " + subject + " with a " + priority + " priority has been raised.");
+                  content: "Thanks you " + name + ".  Your case for " + subject + " with a " + priority + " priority has been raised.",
                   image: {
                     smallImageUrl: "https://smc-alexa-case.herokuapp.com/salesforce-logo-small.png",
                     largeImageUrl: "https://smc-alexa-case.herokuapp.com/salesforce-logo.png"
