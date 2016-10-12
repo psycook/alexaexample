@@ -77,7 +77,7 @@ app.intent('caseCreate', {
                 console.log("UTTERANCE:caseCreate - Thank you " + name + ".  I have opened your " + priority + " priority case for the " + subject);
                 response.say("Thank you " + name + ".  I have opened your " + priority + " priority case for the " + subject);
                 response.card({
-                  type: "Simple",
+                  type: "Standard",
                   title: "Case Created",
                   content: "Thanks you " + name + ".  Your case for " + subject + " with a " + priority + " priority has been raised.");
                   image: {
