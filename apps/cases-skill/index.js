@@ -101,6 +101,42 @@ app.intent('caseCreate', {
     }
 );
 
+app.intent('caseOpenCount', {
+        "slots": {
+        },
+        "utterances": ["open cases",
+                       "number of open cases",
+                       "how many open cases"]
+    },
+    function(request, response) {
+        org.authenticate({
+            username: SF_USERNAME,
+            password: SF_PASSWORD
+        }).then(function() {
+            var query = "SELECT Id, Status FROM Case WHERE Status != 'Closed'";
+            return org.query({ query: query })
+        }).then(function(result) {
+            console.log("UTTERANCE: caseOpenCount - You have " +  result.records.length + " open cases");
+            response.say("You have " +  result.records.length + " open cases");
+            response.card({
+              type: "Standard",
+              title: "Open Cases",
+              text: "You have " +  result.records.length + " open cases.",
+              image: {
+                smallImageUrl: "https://s3-eu-west-1.amazonaws.com/smc-s3-images/images/salesforce-logo-small.png",
+                largeImageUrl: "https://s3-eu-west-1.amazonaws.com/smc-s3-images/images/salesforce-logo.png"
+              }
+            });
+            response.send();
+        }).error(function(err) {
+            console.log("UTTERANCE:caseOpenCount - Tilt " + JSON.stringify(err));
+            response.say("I am afraid I cannot do that " + name);
+            response.send();
+        });
+        return false;
+    }
+);
+
 app.sessionEnded(function(request,response) {
     // Clean up the user's server-side stuff, if necessary
     console.log("SESSION ENDED");
