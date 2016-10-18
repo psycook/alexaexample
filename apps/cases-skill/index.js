@@ -137,6 +137,42 @@ app.intent('caseOpenCount', {
     }
 );
 
+app.intent('caseHighPriorityCount', {
+        "slots": {
+        },
+        "utterances": ["open high priority cases",
+                       "number of open high prioirty cases",
+                       "how many open high prioirty cases"]
+    },
+    function(request, response) {
+        org.authenticate({
+            username: SF_USERNAME,
+            password: SF_PASSWORD
+        }).then(function() {
+            var query = "SELECT Priority FROM Case WHERE Priority = 'High' AND Status != 'Closed'";
+            return org.query({ query: query })
+        }).then(function(result) {
+            console.log("UTTERANCE: caseOpenCount - You have " +  result.records.length + " high priority open cases");
+            response.say("You have " +  result.records.length + " high priority open cases");
+            response.card({
+              type: "Standard",
+              title: "Open Cases",
+              text: "You have " +  result.records.length + " open cases.",
+              image: {
+                smallImageUrl: "https://s3-eu-west-1.amazonaws.com/smc-s3-images/images/salesforce-logo-small.png",
+                largeImageUrl: "https://s3-eu-west-1.amazonaws.com/smc-s3-images/images/salesforce-logo.png"
+              }
+            });
+            response.send();
+        }).error(function(err) {
+            console.log("UTTERANCE:caseHighPriorityCount - Tilt " + JSON.stringify(err));
+            response.say("I am afraid I cannot do that " + name);
+            response.send();
+        });
+        return false;
+    }
+);
+
 app.sessionEnded(function(request,response) {
     // Clean up the user's server-side stuff, if necessary
     console.log("SESSION ENDED");
