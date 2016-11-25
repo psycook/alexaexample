@@ -1,14 +1,14 @@
 {
-  "name": "cases-skill",
+  "name": "presentation-skill",
   "version": "1.0.0",
-  "description": "Skill to manipulate Salesforce Cases",
+  "description": "Skill to manipulate presentation agenda",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "salesforce",
-    "cases",
+    "presentaton",
     "node",
     "alexa"
   ],
